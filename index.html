@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>juniorusaa — Web Demo Vitrini</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#07080d;
+  --surface:rgba(255,255,255,0.03);
+  --border:rgba(255,255,255,0.08);
+  --text:#f0f4ff;
+  --muted:rgba(240,244,255,0.45);
+  --purple:#a78bfa;
+  --blue:#60a5fa;
+  --pink:#f472b6;
+  --green:#34d399;
+  --gold:#fbbf24;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;overflow-x:hidden;}
+
+/* BACKGROUND ORBS */
+.orb{position:fixed;border-radius:50%;filter:blur(140px);pointer-events:none;z-index:0;}
+.o1{width:800px;height:800px;background:rgba(167,139,250,0.05);top:-400px;right:-200px;}
+.o2{width:700px;height:700px;background:rgba(96,165,250,0.04);bottom:-400px;left:-200px;}
+.o3{width:500px;height:500px;background:rgba(244,114,182,0.03);top:50%;left:50%;transform:translate(-50%,-50%);}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:1rem 5%;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(24px);background:rgba(7,8,13,0.85);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:800;background:linear-gradient(135deg,var(--purple),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-0.02em;}
+.nav-links{display:flex;align-items:center;gap:2rem;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.85rem;font-weight:500;transition:color 0.2s;}
+.nav-links a:hover{color:var(--text);}
+.nav-cta{padding:0.55rem 1.4rem;background:linear-gradient(135deg,var(--purple),var(--blue));border-radius:8px;color:#fff!important;font-weight:700!important;font-size:0.82rem!important;transition:opacity 0.2s;}
+.nav-cta:hover{opacity:0.85;}
+
+/* HERO */
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:9rem 5% 5rem;position:relative;z-index:10;}
+.live-badge{display:inline-flex;align-items:center;gap:0.5rem;padding:0.45rem 1.2rem;border:1px solid rgba(52,211,153,0.25);border-radius:999px;font-size:0.72rem;color:var(--green);font-weight:700;letter-spacing:0.08em;margin-bottom:2rem;background:rgba(52,211,153,0.06);}
+.badge-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1;box-shadow:0 0 6px var(--green);}50%{opacity:0.3;box-shadow:none;}}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(3rem,8vw,7.5rem);font-weight:800;line-height:0.93;letter-spacing:-0.04em;margin-bottom:1.5rem;}
+.h-line1{display:block;background:linear-gradient(180deg,#fff 30%,rgba(255,255,255,0.5) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.h-line2{display:block;background:linear-gradient(135deg,var(--purple) 0%,var(--blue) 50%,var(--pink) 100%);background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:gradShift 5s ease infinite;}
+@keyframes gradShift{0%,100%{background-position:0%;}50%{background-position:100%;}}
+.hero-sub{font-size:clamp(1rem,1.8vw,1.15rem);color:var(--muted);max-width:600px;line-height:1.8;margin-bottom:3rem;}
+.hero-sub strong{color:var(--text);}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-bottom:5rem;}
+.btn-primary{padding:0.9rem 2.2rem;background:linear-gradient(135deg,var(--purple),var(--blue));border:none;border-radius:12px;color:#fff;font-weight:700;font-size:0.95rem;cursor:pointer;text-decoration:none;display:inline-block;transition:all 0.25s;}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 15px 40px rgba(167,139,250,0.3);}
+.btn-outline{padding:0.9rem 2.2rem;background:transparent;border:1px solid var(--border);border-radius:12px;color:var(--text);font-weight:600;font-size:0.95rem;cursor:pointer;text-decoration:none;display:inline-block;transition:all 0.25s;}
+.btn-outline:hover{border-color:rgba(167,139,250,0.5);background:rgba(167,139,250,0.05);}
+.stats-row{display:flex;gap:5rem;flex-wrap:wrap;justify-content:center;}
+.stat-item{text-align:center;}
+.stat-n{font-family:'Space Grotesk',sans-serif;font-size:2.8rem;font-weight:800;background:linear-gradient(135deg,var(--purple),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
+.stat-l{color:var(--muted);font-size:0.72rem;text-transform:uppercase;letter-spacing:0.12em;margin-top:0.4rem;}
+
+/* SCROLLING TICKER */
+.ticker-wrap{overflow:hidden;padding:1.5rem 0;background:rgba(255,255,255,0.02);border-top:1px solid var(--border);border-bottom:1px solid var(--border);position:relative;z-index:10;margin-bottom:0;}
+.ticker-track{display:flex;gap:3rem;animation:ticker 30s linear infinite;white-space:nowrap;}
+.ticker-track:hover{animation-play-state:paused;}
+.ticker-item{display:inline-flex;align-items:center;gap:0.7rem;font-size:0.8rem;color:var(--muted);font-weight:500;}
+.ticker-item .dot{width:5px;height:5px;border-radius:50%;background:var(--purple);flex-shrink:0;}
+@keyframes ticker{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* DEMOS SECTION */
+#demolar{padding:7rem 5%;position:relative;z-index:10;max-width:1400px;margin:0 auto;}
+.section-label{display:inline-flex;align-items:center;gap:0.5rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--purple);margin-bottom:1rem;}
+.section-label::before{content:'';display:inline-block;width:20px;height:1px;background:var(--purple);}
+.section-title-lg{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,4vw,3.5rem);font-weight:800;letter-spacing:-0.03em;margin-bottom:0.7rem;}
+.section-sub{color:var(--muted);font-size:1rem;max-width:500px;line-height:1.7;margin-bottom:3rem;}
+
+/* FILTER BAR */
+.filter-bar{display:flex;gap:0.6rem;flex-wrap:wrap;margin-bottom:3.5rem;}
+.filt{padding:0.45rem 1.1rem;border:1px solid var(--border);border-radius:999px;font-size:0.8rem;font-weight:600;color:var(--muted);background:transparent;cursor:pointer;transition:all 0.2s;}
+.filt:hover{border-color:rgba(167,139,250,0.4);color:var(--purple);}
+.filt.active{border-color:var(--purple);background:rgba(167,139,250,0.1);color:var(--purple);}
+
+/* DEMO GRID */
+.demos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+.demo-card{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:all 0.3s;display:flex;flex-direction:column;}
+.demo-card:hover{transform:translateY(-6px);border-color:rgba(255,255,255,0.15);box-shadow:0 20px 60px rgba(0,0,0,0.4);}
+.demo-card.featured{border-color:rgba(167,139,250,0.3);background:rgba(167,139,250,0.03);}
+
+/* IMAGE PREVIEW */
+.demo-preview{position:relative;height:220px;overflow:hidden;}
+.demo-preview img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s;}
+.demo-card:hover .demo-preview img{transform:scale(1.06);}
+.demo-preview-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.1) 0%,rgba(0,0,0,0.5) 100%);transition:opacity 0.3s;}
+.demo-card:hover .demo-preview-overlay{opacity:0.7;}
+.preview-chips{position:absolute;top:1rem;left:1rem;display:flex;gap:0.4rem;flex-wrap:wrap;}
+.chip{padding:0.25rem 0.7rem;border-radius:999px;font-size:0.68rem;font-weight:700;backdrop-filter:blur(8px);}
+.demo-open-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0;padding:0.65rem 1.6rem;background:rgba(255,255,255,0.95);color:#0a0a0a;border-radius:8px;font-weight:700;font-size:0.85rem;text-decoration:none;transition:all 0.3s;white-space:nowrap;}
+.demo-card:hover .demo-open-btn{opacity:1;}
+
+/* CARD BODY */
+.demo-body{padding:1.4rem;flex:1;display:flex;flex-direction:column;}
+.demo-cat{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.5rem;}
+.demo-name{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;font-weight:700;margin-bottom:0.5rem;letter-spacing:-0.02em;}
+.demo-desc{color:var(--muted);font-size:0.82rem;line-height:1.65;flex:1;margin-bottom:1rem;}
+.demo-footer{display:flex;align-items:center;justify-content:space-between;}
+.demo-live{display:flex;align-items:center;gap:0.4rem;font-size:0.72rem;color:var(--green);}
+.demo-live::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);}
+.demo-link{font-size:0.8rem;font-weight:600;text-decoration:none;transition:all 0.2s;display:flex;align-items:center;gap:0.3rem;}
+.demo-link:hover{gap:0.6rem;}
+
+/* FEATURED CARD (wide) */
+.demo-card.wide{grid-column:span 2;}
+
+/* CTA SECTION */
+#cta{padding:7rem 5%;position:relative;z-index:10;}
+.cta-inner{max-width:900px;margin:0 auto;text-align:center;padding:5rem 3rem;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:24px;position:relative;overflow:hidden;}
+.cta-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:300px;background:radial-gradient(ellipse at center,rgba(167,139,250,0.12),transparent 70%);pointer-events:none;}
+.cta-inner h2{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,4vw,3rem);font-weight:800;letter-spacing:-0.03em;margin-bottom:1rem;position:relative;}
+.cta-inner p{color:var(--muted);font-size:1rem;line-height:1.75;margin-bottom:2.5rem;position:relative;}
+.cta-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;position:relative;}
+
+/* FOOTER */
+footer{padding:3rem 5%;border-top:1px solid var(--border);position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+.footer-logo{font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:800;background:linear-gradient(135deg,var(--purple),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.footer-text{color:var(--muted);font-size:0.8rem;}
+.footer-links{display:flex;gap:1.5rem;}
+.footer-links a{color:var(--muted);text-decoration:none;font-size:0.8rem;transition:color 0.2s;}
+.footer-links a:hover{color:var(--text);}
+
+@media(max-width:1024px){.demos-grid{grid-template-columns:repeat(2,1fr);}.demo-card.wide{grid-column:span 1;}}
+@media(max-width:640px){.demos-grid{grid-template-columns:1fr;}.nav-links{display:none;}.stats-row{gap:2.5rem;}.demo-card.wide{grid-column:span 1;}}
+</style>
+</head>
+<body>
+
+<div class="orb o1"></div>
+<div class="orb o2"></div>
+<div class="orb o3"></div>
+
+<nav>
+  <div class="nav-logo">juniorusaa</div>
+  <div class="nav-links">
+    <a href="#demolar">Demolar</a>
+    <a href="#cta">İletişim</a>
+    <a href="https://github.com/juniorusaa" target="_blank">GitHub</a>
+    <a href="#demolar" class="nav-cta">Demoları Gör</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="live-badge">
+    <span class="badge-dot"></span>
+    23 Demo Canlı ve Aktif
+  </div>
+  <h1>
+    <span class="h-line1">Web Tasarım</span>
+    <span class="h-line2">Vitrini</span>
+  </h1>
+  <p class="hero-sub">Her sektör için <strong>profesyonel, gerçek görsellerle</strong> tasarlanmış demo siteler. Restoran'dan hukuk bürosuna, e-ticaretten diş kliniğine — iş dünyasının her alanı için modern web çözümleri.</p>
+  <div class="hero-btns">
+    <a href="#demolar" class="btn-primary">Tüm Demoları İncele</a>
+    <a href="https://github.com/juniorusaa" target="_blank" class="btn-outline">GitHub'da İncele</a>
+  </div>
+  <div class="stats-row">
+    <div class="stat-item"><div class="stat-n">23</div><div class="stat-l">Canlı Demo</div></div>
+    <div class="stat-item"><div class="stat-n">10+</div><div class="stat-l">Sektör</div></div>
+    <div class="stat-item"><div class="stat-n">100%</div><div class="stat-l">Gerçek Görsel</div></div>
+    <div class="stat-item"><div class="stat-n">0</div><div class="stat-l">Emoji Kullanımı</div></div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <span class="ticker-item"><span class="dot"></span>Restoran</span>
+    <span class="ticker-item"><span class="dot"></span>Klinik</span>
+    <span class="ticker-item"><span class="dot"></span>Otel</span>
+    <span class="ticker-item"><span class="dot"></span>Güzellik Merkezi</span>
+    <span class="ticker-item"><span class="dot"></span>Araç Galerisi</span>
+    <span class="ticker-item"><span class="dot"></span>Kurumsal Firma</span>
+    <span class="ticker-item"><span class="dot"></span>E-Ticaret</span>
+    <span class="ticker-item"><span class="dot"></span>Avukat</span>
+    <span class="ticker-item"><span class="dot"></span>Spor Salonu</span>
+    <span class="ticker-item"><span class="dot"></span>Emlak</span>
+    <span class="ticker-item"><span class="dot"></span>Düğün Organizasyon</span>
+    <span class="ticker-item"><span class="dot"></span>Eczane</span>
+    <span class="ticker-item"><span class="dot"></span>Dövme Stüdyo</span>
+    <span class="ticker-item"><span class="dot"></span>Cafe</span>
+    <span class="ticker-item"><span class="dot"></span>Fotoğraf Stüdyo</span>
+    <span class="ticker-item"><span class="dot"></span>İnşaat</span>
+    <span class="ticker-item"><span class="dot"></span>Diş Kliniği</span>
+    <span class="ticker-item"><span class="dot"></span>Kuaför</span>
+    <!-- repeat for seamless loop -->
+    <span class="ticker-item"><span class="dot"></span>Restoran</span>
+    <span class="ticker-item"><span class="dot"></span>Klinik</span>
+    <span class="ticker-item"><span class="dot"></span>Otel</span>
+    <span class="ticker-item"><span class="dot"></span>Güzellik Merkezi</span>
+    <span class="ticker-item"><span class="dot"></span>Araç Galerisi</span>
+    <span class="ticker-item"><span class="dot"></span>Kurumsal Firma</span>
+    <span class="ticker-item"><span class="dot"></span>E-Ticaret</span>
+    <span class="ticker-item"><span class="dot"></span>Avukat</span>
+    <span class="ticker-item"><span class="dot"></span>Spor Salonu</span>
+    <span class="ticker-item"><span class="dot"></span>Emlak</span>
+    <span class="ticker-item"><span class="dot"></span>Düğün Organizasyon</span>
+    <span class="ticker-item"><span class="dot"></span>Eczane</span>
+    <span class="ticker-item"><span class="dot"></span>Dövme Stüdyo</span>
+    <span class="ticker-item"><span class="dot"></span>Cafe</span>
+    <span class="ticker-item"><span class="dot"></span>Fotoğraf Stüdyo</span>
+    <span class="ticker-item"><span class="dot"></span>İnşaat</span>
+    <span class="ticker-item"><span class="dot"></span>Diş Kliniği</span>
+    <span class="ticker-item"><span class="dot"></span>Kuaför</span>
+  </div>
+</div>
+
+<!-- DEMOS -->
+<section id="demolar">
+  <div class="section-label">Demo Vitrini</div>
+  <h2 class="section-title-lg">Tüm Sektörler İçin<br>Modern Web Çözümleri</h2>
+  <p class="section-sub">Her demo, o sektörün gerçek ihtiyaçlarına göre tasarlandı. Gerçek görseller, özgün renkler, mobil uyumlu.</p>
+
+  <div class="filter-bar">
+    <button class="filt active" data-cat="hepsi" onclick="filterCards('hepsi',this)">Tümü (<span id="cnt-hepsi">0</span>)</button>
+    <button class="filt" data-cat="hizmet" onclick="filterCards('hizmet',this)">Hizmet (<span id="cnt-hizmet">0</span>)</button>
+    <button class="filt" data-cat="saglik" onclick="filterCards('saglik',this)">Sağlık (<span id="cnt-saglik">0</span>)</button>
+    <button class="filt" data-cat="yeme-icme" onclick="filterCards('yeme-icme',this)">Yeme & İçme (<span id="cnt-yeme-icme">0</span>)</button>
+    <button class="filt" data-cat="eticaret" onclick="filterCards('eticaret',this)">E-Ticaret (<span id="cnt-eticaret">0</span>)</button>
+    <button class="filt" data-cat="kurumsal" onclick="filterCards('kurumsal',this)">Kurumsal (<span id="cnt-kurumsal">0</span>)</button>
+    <button class="filt" data-cat="turizm" onclick="filterCards('turizm',this)">Turizm (<span id="cnt-turizm">0</span>)</button>
+  </div>
+
+  <div class="demos-grid" id="demosGrid"></div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="cta-inner">
+    <div class="cta-glow"></div>
+    <h2>Kendi Sitenizi<br>Birlikte Yapalım</h2>
+    <p>Bu demolardan ilham aldınız mı? Sektörünüze özel, profesyonel bir web sitesi için iletişime geçin.</p>
+    <div class="cta-btns">
+      <a href="mailto:info@example.com" class="btn-primary">Proje Teklifi Al</a>
+      <a href="https://github.com/juniorusaa" target="_blank" class="btn-outline">GitHub'ı Takip Et</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">juniorusaa</div>
+  <div class="footer-text"><span id="footer-count">0</span> demo, 10+ sektör — GitHub Pages</div>
+  <div class="footer-links">
+    <a href="https://github.com/juniorusaa" target="_blank">GitHub</a>
+    <a href="#demolar">Demolar</a>
+    <a href="#cta">İletişim</a>
+  </div>
+</footer>
+
+<script>
+const demos = [
+  {
+    id:'seyahat', cat:'turizm', name:'Seyahat Acentesi',
+    desc:'Altın/siyah premium tema, destinasyon kartları, tur paketleri, galeri ve müşteri yorumları.',
+    img:'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80',
+    url:'https://juniorusaa.github.io/seyahat/',
+    accent:'#C9A84C', accentLight:'rgba(201,168,76,0.15)',
+    chips:['Seyahat','Tur','Lüks'], cat_label:'Turizm', featured:true
+  },
+  {
+    id:'restoran', cat:'yeme-icme', name:'Restoran & Yemek',
+    desc:'Turuncu/terracotta renk şeması, lezzetli yemek görselleri, menü kartları ve rezervasyon formu.',
+    img:'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80',
+    url:'https://juniorusaa.github.io/restoran/',
+    accent:'#d4805a', accentLight:'rgba(212,128,90,0.15)',
+    chips:['Restoran','Rezervasyon'], cat_label:'Yeme & İçme', featured:false
+  },
+  {
+    id:'klinik', cat:'saglik', name:'Medikal Klinik',
+    desc:'Açık mavi/navy renk şeması, doktor kadrosu, online randevu ve hasta yorumları.',
+    img:'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&q=80',
+    url:'https://juniorusaa.github.io/klinik/',
+    accent:'#60a5fa', accentLight:'rgba(96,165,250,0.15)',
+    chips:['Klinik','Randevu'], cat_label:'Sağlık', featured:false
+  },
+  {
+    id:'otel', cat:'turizm', name:'Lüks Otel',
+    desc:'Lacivert/altın renk şeması, oda tipleri, olanaklar, galeri ve misafir yorumları.',
+    img:'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80',
+    url:'https://juniorusaa.github.io/otel/',
+    accent:'#c8a96e', accentLight:'rgba(200,169,110,0.15)',
+    chips:['Otel','Turizm'], cat_label:'Turizm', featured:false
+  },
+  {
+    id:'hukuk', cat:'hizmet', name:'Hukuk Bürosu',
+    desc:'Lacivert/altın premium tema, 6 uzmanlık alanı, avukat kadrosu, müvekkil yorumları.',
+    img:'https://images.unsplash.com/photo-1589994965851-a8f479c573a9?w=800&q=80',
+    url:'https://juniorusaa.github.io/hukuk/',
+    accent:'#c9a96e', accentLight:'rgba(201,169,110,0.15)',
+    chips:['Hukuk','Avukat'], cat_label:'Hizmet', featured:true
+  },
+  {
+    id:'pilates', cat:'hizmet', name:'Pilates & Yoga',
+    desc:'Pudra/sage soft tema, ders koleksiyonu, haftalık program, üyelik ve eğitmen kadrosu.',
+    img:'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800&q=80',
+    url:'https://juniorusaa.github.io/pilates/',
+    accent:'#d49b9b', accentLight:'rgba(212,155,155,0.15)',
+    chips:['Pilates','Yoga','Wellness'], cat_label:'Wellness', featured:true
+  },
+  {
+    id:'yat', cat:'turizm', name:'Yat Turu & Kiralama',
+    desc:'Okyanus mavisi/altın lüks tema, filo detayları, 3 adımlı rezervasyon formu.',
+    img:'https://images.unsplash.com/photo-1540541338287-41700207dee6?w=800&q=80',
+    url:'https://juniorusaa.github.io/yat/',
+    accent:'#4ec5b8', accentLight:'rgba(78,197,184,0.15)',
+    chips:['Yat','Marine','Turizm'], cat_label:'Turizm', featured:true
+  },
+  {
+    id:'guzellik', cat:'hizmet', name:'Güzellik Merkezi',
+    desc:'Krem/gül renk şeması, hizmet kartları, uzman kadro ve online randevu sistemi.',
+    img:'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=80',
+    url:'https://juniorusaa.github.io/guzellik/',
+    accent:'#f472b6', accentLight:'rgba(244,114,182,0.15)',
+    chips:['Güzellik','Spa'], cat_label:'Hizmet', featured:false
+  },
+  {
+    id:'arac-galeri', cat:'eticaret', name:'Araç Galerisi',
+    desc:'Siyah/kırmızı renk şeması, araç kartları, filtreler, favoriler ve test sürüşü formu.',
+    img:'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&q=80',
+    url:'https://juniorusaa.github.io/arac-galeri/',
+    accent:'#e63946', accentLight:'rgba(230,57,70,0.15)',
+    chips:['Galeri','Filtre'], cat_label:'E-Ticaret', featured:false
+  },
+  {
+    id:'kurumsal', cat:'kurumsal', name:'Kurumsal Firma',
+    desc:'Koyu slate/elektrik mavisi, hizmetler, ekip, istatistikler ve teklif formu.',
+    img:'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80',
+    url:'https://juniorusaa.github.io/kurumsal/',
+    accent:'#3b82f6', accentLight:'rgba(59,130,246,0.15)',
+    chips:['Kurumsal','B2B'], cat_label:'Kurumsal', featured:true
+  },
+  {
+    id:'urun-demo', cat:'eticaret', name:'Ürün Mağazası',
+    desc:'Koyu mor/altın renk şeması, ürün grid, kategoriler, fiyatlar ve müşteri yorumları.',
+    img:'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80',
+    url:'https://juniorusaa.github.io/urun-demo/',
+    accent:'#a855f7', accentLight:'rgba(168,85,247,0.15)',
+    chips:['Mağaza','Ürün'], cat_label:'E-Ticaret', featured:false
+  },
+  {
+    id:'avukat', cat:'hizmet', name:'Hukuk Bürosu',
+    desc:'Lacivert/altın şema, uzmanlık alanları, avukat profilleri ve ücretsiz danışma formu.',
+    img:'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=800&q=80',
+    url:'https://juniorusaa.github.io/avukat/',
+    accent:'#c9a84c', accentLight:'rgba(201,168,76,0.15)',
+    chips:['Hukuk','Danışma'], cat_label:'Hizmet', featured:false
+  },
+  {
+    id:'spor-salonu', cat:'hizmet', name:'Fitness & Spor',
+    desc:'Siyah/turuncu şema, ders programı, üyelik paketleri ve eğitmen kadrosu.',
+    img:'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80',
+    url:'https://juniorusaa.github.io/spor-salonu/',
+    accent:'#f97316', accentLight:'rgba(249,115,22,0.15)',
+    chips:['Fitness','Üyelik'], cat_label:'Hizmet', featured:false
+  },
+  {
+    id:'emlak', cat:'eticaret', name:'Gayrimenkul',
+    desc:'Koyu yeşil şema, ilan kartları, arama & filtre, harita ve danışman formu.',
+    img:'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80',
+    url:'https://juniorusaa.github.io/emlak/',
+    accent:'#4ade80', accentLight:'rgba(74,222,128,0.15)',
+    chips:['Emlak','İlan'], cat_label:'E-Ticaret', featured:false
+  },
+  {
+    id:'dugun', cat:'hizmet', name:'Düğün Organizasyon',
+    desc:'Bordo/gül altın şema, hizmetler, galeri, paketler ve fiyatlandırma.',
+    img:'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=800&q=80',
+    url:'https://juniorusaa.github.io/dugun/',
+    accent:'#d4a0b5', accentLight:'rgba(212,160,181,0.15)',
+    chips:['Düğün','Organizasyon'], cat_label:'Hizmet', featured:false
+  },
+  {
+    id:'eczane', cat:'saglik', name:'Eczane',
+    desc:'Beyaz/yeşil şema, ürün kataloğu, hizmetler, çalışma saatleri ve sipariş.',
+    img:'https://images.unsplash.com/photo-1576602976047-174e57a47881?w=800&q=80',
+    url:'https://juniorusaa.github.io/eczane/',
+    accent:'#16a34a', accentLight:'rgba(22,163,74,0.12)',
+    chips:['Eczane','Sağlık'], cat_label:'Sağlık', featured:false
+  },
+  {
+    id:'dovme-studio', cat:'hizmet', name:'Dövme Stüdyosu',
+    desc:'Siyah/kırmızı şema, galeri, sanatçı profilleri, hizmetler ve randevu.',
+    img:'https://images.unsplash.com/photo-1542727365-19732a80dcfd?w=800&q=80',
+    url:'https://juniorusaa.github.io/dovme-studio/',
+    accent:'#dc2626', accentLight:'rgba(220,38,38,0.15)',
+    chips:['Tattoo','Sanat'], cat_label:'Hizmet', featured:false
+  },
+  {
+    id:'cafe', cat:'yeme-icme', name:'Specialty Cafe',
+    desc:'Kahverengi/krem şema, menü kartları, atmosfer galerisi ve hikaye bölümü.',
+    img:'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=800&q=80',
+    url:'https://juniorusaa.github.io/cafe/',
+    accent:'#d4a96a', accentLight:'rgba(212,169,106,0.15)',
+    chips:['Cafe','Kahve'], cat_label:'Yeme & İçme', featured:false
+  },
+  {
+    id:'fotograf-studyosu', cat:'hizmet', name:'Fotoğraf Stüdyosu',
+    desc:'Koyu gri/amber şema, masonry galeri, hizmetler, ekip ve proje teklifi.',
+    img:'https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=800&q=80',
+    url:'https://juniorusaa.github.io/fotograf-studyosu/',
+    accent:'#f59e0b', accentLight:'rgba(245,158,11,0.15)',
+    chips:['Fotoğraf','Stüdyo'], cat_label:'Hizmet', featured:false
+  },
+  {
+    id:'insaat', cat:'kurumsal', name:'İnşaat Firması',
+    desc:'Koyu/sarı şema, proje referansları, hizmetler, sertifikalar ve teklif formu.',
+    img:'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80',
+    url:'https://juniorusaa.github.io/insaat/',
+    accent:'#eab308', accentLight:'rgba(234,179,8,0.15)',
+    chips:['İnşaat','Yapı'], cat_label:'Kurumsal', featured:false
+  },
+  {
+    id:'e-ticaret', cat:'eticaret', name:'Fashion E-Commerce',
+    desc:'Koyu mor/pembe gradient şema, ürün grid, kategoriler, kampanya banner.',
+    img:'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800&q=80',
+    url:'https://juniorusaa.github.io/e-ticaret/',
+    accent:'#ec4899', accentLight:'rgba(236,72,153,0.15)',
+    chips:['Moda','E-Ticaret'], cat_label:'E-Ticaret', featured:false
+  },
+  {
+    id:'dis-klinigi', cat:'saglik', name:'Diş Kliniği',
+    desc:'Beyaz/mavi şema, tedaviler, doktor kadrosu, istatistikler ve online randevu.',
+    img:'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=800&q=80',
+    url:'https://juniorusaa.github.io/dis-klinigi/',
+    accent:'#0ea5e9', accentLight:'rgba(14,165,233,0.12)',
+    chips:['Diş','Klinik'], cat_label:'Sağlık', featured:false
+  },
+  {
+    id:'kuafor', cat:'hizmet', name:'Kuaför & Berber',
+    desc:'Siyah/altın şema, hizmetler, stilist ekip, önce/sonra galerisi ve randevu.',
+    img:'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&q=80',
+    url:'https://juniorusaa.github.io/kuafor/',
+    accent:'#fbbf24', accentLight:'rgba(251,191,36,0.15)',
+    chips:['Kuaför','Güzellik'], cat_label:'Hizmet', featured:false
+  },
+,
+  {
+    id:'kumas-iplik', cat:'kurumsal', name:'Kumaş ve İplik Fabrikası',
+    desc:'Tekstil üretimi, iplik çeşitleri ve boyama hizmetleri.',
+    img:'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=800&q=80',
+    url:'https://juniorusaa.github.io/kumas-iplik/',
+    accent:'#c9a0dc', accentLight:'rgba(201,160,220,0.15)',
+    chips:['Tekstil','Fabrika'], cat_label:'Sanayi', featured:false
+  },
+  {
+    id:'koli-ambalaj', cat:'kurumsal', name:'Koli ve Ambalaj Üretimi',
+    desc:'Özel baskılı koli, oluklu karton ve ambalaj çözümleri.',
+    img:'https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=800&q=80',
+    url:'https://juniorusaa.github.io/koli-ambalaj/',
+    accent:'#4caf7d', accentLight:'rgba(76,175,125,0.15)',
+    chips:['Ambalaj','Üretim'], cat_label:'Sanayi', featured:false
+  },
+  {
+    id:'telefon-servis', cat:'hizmet', name:'Telefon Satış ve Tamir',
+    desc:'Her marka telefon tamiri ve orijinal yedek parça.',
+    img:'https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?w=800&q=80',
+    url:'https://juniorusaa.github.io/telefon-servis/',
+    accent:'#00bcd4', accentLight:'rgba(0,188,212,0.15)',
+    chips:['Telefon','Servis'], cat_label:'Servis', featured:false
+  },
+  {
+    id:'tarim-botanik', cat:'kurumsal', name:'Ziraat Tarım Botanik',
+    desc:'Sertifikalı tohum, zirai ilaç ve tarım danışmanlığı.',
+    img:'https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=800&q=80',
+    url:'https://juniorusaa.github.io/tarim-botanik/',
+    accent:'#7ab648', accentLight:'rgba(122,182,72,0.15)',
+    chips:['Tarım','Botanik'], cat_label:'Tarım', featured:false
+  },
+  {
+    id:'yangin-sistem', cat:'kurumsal', name:'Yangın Söndürme Sistemleri',
+    desc:'Sprinkler, alarm ve yangın söndürme sistemi kurulumu.',
+    img:'https://images.unsplash.com/photo-1562564055-71e051d33c19?w=800&q=80',
+    url:'https://juniorusaa.github.io/yangin-sistem/',
+    accent:'#ff5722', accentLight:'rgba(255,87,34,0.15)',
+    chips:['Yangın','Güvenlik'], cat_label:'Güvenlik', featured:false
+  },
+  {
+    id:'mutfak-mermer', cat:'hizmet', name:'Mutfak ve Mermer Firması',
+    desc:'Doğal taş tezgah ve özel mutfak dolabı tasarımı.',
+    img:'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80',
+    url:'https://juniorusaa.github.io/mutfak-mermer/',
+    accent:'#d4af37', accentLight:'rgba(212,175,55,0.15)',
+    chips:['Mutfak','Mermer'], cat_label:'Dekorasyon', featured:false
+  },
+  {
+    id:'yazilim-ajans', cat:'kurumsal', name:'Yazılım Ajansı',
+    desc:'Web, mobil ve kurumsal yazılım geliştirme.',
+    img:'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80',
+    url:'https://juniorusaa.github.io/yazilim-ajans/',
+    accent:'#00d4ff', accentLight:'rgba(0,212,255,0.15)',
+    chips:['Yazılım','Teknoloji'], cat_label:'Teknoloji', featured:true
+  },
+  {
+    id:'solar-enerji', cat:'kurumsal', name:'Solar Enerji Firması',
+    desc:'Güneş enerjisi kurulumu ile elektrik faturanızı sıfırlayın.',
+    img:'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800&q=80',
+    url:'https://juniorusaa.github.io/solar-enerji/',
+    accent:'#f9a825', accentLight:'rgba(249,168,37,0.15)',
+    chips:['Solar','Enerji'], cat_label:'Enerji', featured:true
+  },
+  {
+    id:'sanayi-uretim', cat:'kurumsal', name:'Sanayi ve Üretim',
+    desc:'CNC torna, lazer kesim ve kaynak hizmetleri.',
+    img:'https://images.unsplash.com/photo-1565043666747-69f6646db940?w=800&q=80',
+    url:'https://juniorusaa.github.io/sanayi-uretim/',
+    accent:'#ff6b00', accentLight:'rgba(255,107,0,0.15)',
+    chips:['Sanayi','CNC'], cat_label:'Sanayi', featured:false
+  },
+  {
+    id:'kepenk-tente', cat:'hizmet', name:'Kepenk ve Tente',
+    desc:'Motorlu kepenk, stor tente ve pergola sistemleri.',
+    img:'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800&q=80',
+    url:'https://juniorusaa.github.io/kepenk-tente/',
+    accent:'#4fc3f7', accentLight:'rgba(79,195,247,0.15)',
+    chips:['Kepenk','Tente'], cat_label:'İmalat', featured:false
+  },
+  {
+    id:'peyzaj-botanik', cat:'hizmet', name:'Peyzaj Botanik',
+    desc:'Bahçe tasarımı, bitki satışı ve sulama sistemleri.',
+    img:'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800&q=80',
+    url:'https://juniorusaa.github.io/peyzaj-botanik/',
+    accent:'#4caf50', accentLight:'rgba(76,175,80,0.15)',
+    chips:['Peyzaj','Bahçe'], cat_label:'Peyzaj', featured:false
+  },
+  {
+    id:'kapi-pencere', cat:'hizmet', name:'Kapı Pencere',
+    desc:'PVC, alüminyum ve ahşap kapı pencere sistemleri.',
+    img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80',
+    url:'https://juniorusaa.github.io/kapi-pencere/',
+    accent:'#90caf9', accentLight:'rgba(144,202,249,0.15)',
+    chips:['Kapı','Pencere'], cat_label:'İnşaat', featured:false
+  },
+  {
+    id:'dijital-ajans', cat:'kurumsal', name:'Dijital Ajans ve Reklam',
+    desc:'SEO, Google Ads ve sosyal medya yönetimi.',
+    img:'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80',
+    url:'https://juniorusaa.github.io/dijital-ajans/',
+    accent:'#a78bfa', accentLight:'rgba(167,139,250,0.15)',
+    chips:['Dijital','Reklam'], cat_label:'Ajans', featured:true
+  },
+  {
+    id:'teknoloji-sirket', cat:'kurumsal', name:'Kurumsal Teknoloji',
+    desc:'Bulut çözümler, siber güvenlik ve ağ altyapısı.',
+    img:'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80',
+    url:'https://juniorusaa.github.io/teknoloji-sirket/',
+    accent:'#00e5ff', accentLight:'rgba(0,229,255,0.15)',
+    chips:['BT','Teknoloji'], cat_label:'Teknoloji', featured:false
+  },
+  {
+    id:'vale-otopark', cat:'hizmet', name:'Vale Otopark',
+    desc:'Kurumsal vale ve otopark yönetim hizmetleri.',
+    img:'https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=800&q=80',
+    url:'https://juniorusaa.github.io/vale-otopark/',
+    accent:'#ffd700', accentLight:'rgba(255,215,0,0.15)',
+    chips:['Vale','Otopark'], cat_label:'Hizmet', featured:false
+  },
+  {
+    id:'fidan-gubre', cat:'kurumsal', name:'Fidan ve Gübre Üretimi',
+    desc:'Meyve fidanı ve organik gübre üretimi.',
+    img:'https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?w=800&q=80',
+    url:'https://juniorusaa.github.io/fidan-gubre/',
+    accent:'#8bc34a', accentLight:'rgba(139,195,74,0.15)',
+    chips:['Fidan','Gübre'], cat_label:'Tarım', featured:false
+  },
+  {
+    id:'pastane', cat:'yeme-icme', name:'Pastane ve Dondurmacı',
+    desc:'El yapımı pasta, tatlı ve dondurma sanatı.',
+    img:'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=800&q=80',
+    url:'https://juniorusaa.github.io/pastane/',
+    accent:'#f48fb1', accentLight:'rgba(244,143,177,0.15)',
+    chips:['Pastane','Dondurma'], cat_label:'Pastane', featured:false
+  },
+  {
+    id:'cigkofte', cat:'yeme-icme', name:'Çiğ Köfteci',
+    desc:'Taze, acı ve sağlıklı çiğ köfte. Her gün taze yapım.',
+    img:'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=800&q=80',
+    url:'https://juniorusaa.github.io/cigkofte/',
+    accent:'#ff8f00', accentLight:'rgba(255,143,0,0.15)',
+    chips:['Çiğ Köfte','Fast Food'], cat_label:'Restaurant', featured:false
+  },
+  {
+    id:'matbaa-reklam', cat:'kurumsal', name:'Matbaa ve Reklam',
+    desc:'Kartvizit, broşür, tabela ve kurumsal kimlik tasarımı.',
+    img:'https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=800&q=80',
+    url:'https://juniorusaa.github.io/matbaa-reklam/',
+    accent:'#ce93d8', accentLight:'rgba(206,147,216,0.15)',
+    chips:['Matbaa','Baskı'], cat_label:'Matbaa', featured:false
+  },
+  {
+    id:'oto-servis', cat:'hizmet', name:'Garaj ve Oto Servis',
+    desc:'Her marka araç için yetkili kalitesinde servis.',
+    img:'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=800&q=80',
+    url:'https://juniorusaa.github.io/oto-servis/',
+    accent:'#ff6b35', accentLight:'rgba(255,107,53,0.15)',
+    chips:['Oto','Servis'], cat_label:'Otomotiv', featured:false
+  },
+  {
+    id:'demirci-metal', cat:'kurumsal', name:'Demirci ve Metal İşleri',
+    desc:'Demir doğrama, lazer kesim ve özel metal imalat.',
+    img:'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=800&q=80',
+    url:'https://juniorusaa.github.io/demirci-metal/',
+    accent:'#e65100', accentLight:'rgba(230,81,0,0.15)',
+    chips:['Metal','Demirci'], cat_label:'Sanayi', featured:false
+  },
+  {
+    id:'kamping', cat:'hizmet', name:'Kamping ve Kamp',
+    desc:'Kamp ekipmanı satışı ve outdoor tur organizasyonu.',
+    img:'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=800&q=80',
+    url:'https://juniorusaa.github.io/kamping/',
+    accent:'#66bb6a', accentLight:'rgba(102,187,106,0.15)',
+    chips:['Kamp','Outdoor'], cat_label:'Turizm', featured:false
+  },
+  {
+    id:'dusabin-banyo', cat:'hizmet', name:'Duşakabin ve Banyo',
+    desc:'Özel ölçü duşakabin ve banyo dekorasyon çözümleri.',
+    img:'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=800&q=80',
+    url:'https://juniorusaa.github.io/dusabin-banyo/',
+    accent:'#4dd0e1', accentLight:'rgba(77,208,225,0.15)',
+    chips:['Duşakabin','Banyo'], cat_label:'Dekorasyon', featured:false
+  },
+  {
+    id:'prefabrik', cat:'kurumsal', name:'Prefabrik ve Tiny House',
+    desc:'Hızlı kurulum prefabrik ev ve tiny house çözümleri.',
+    img:'https://images.unsplash.com/photo-1449844908441-8829872d2607?w=800&q=80',
+    url:'https://juniorusaa.github.io/prefabrik/',
+    accent:'#aed581', accentLight:'rgba(174,213,129,0.15)',
+    chips:['Prefabrik','Tiny House'], cat_label:'İnşaat', featured:false
+  },
+  {
+    id:'endustri', cat:'kurumsal', name:'Endüstriyel Firma',
+    desc:'Konveyör, pnömatik ve endüstriyel otomasyon.',
+    img:'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80',
+    url:'https://juniorusaa.github.io/endustri/',
+    accent:'#78909c', accentLight:'rgba(120,144,156,0.15)',
+    chips:['Endüstri','Makine'], cat_label:'Sanayi', featured:false
+  },
+  {
+    id:'moto-kurye', cat:'hizmet', name:'Moto Kurye',
+    desc:'Şehir içi aynı gün teslimat kurye hizmeti.',
+    img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80',
+    url:'https://juniorusaa.github.io/moto-kurye/',
+    accent:'#ff5722', accentLight:'rgba(255,87,34,0.15)',
+    chips:['Kurye','Teslimat'], cat_label:'Lojistik', featured:false
+  },
+  {
+    id:'pizza', cat:'yeme-icme', name:'Pizza Restaurant',
+    desc:'Odun ateşinde pişen otantik Napoliten pizza.',
+    img:'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=80',
+    url:'https://juniorusaa.github.io/pizza/',
+    accent:'#ff7043', accentLight:'rgba(255,112,67,0.15)',
+    chips:['Pizza','İtalyan'], cat_label:'Restaurant', featured:true
+  },
+  {
+    id:'balik-restoran', cat:'yeme-icme', name:'Balık Restaurant',
+    desc:'Taze günlük balık ve deniz ürünleri sofrası.',
+    img:'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80',
+    url:'https://juniorusaa.github.io/balik-restoran/',
+    accent:'#4fc3f7', accentLight:'rgba(79,195,247,0.15)',
+    chips:['Balık','Deniz'], cat_label:'Restaurant', featured:false
+  },
+  {
+    id:'kebapci', cat:'yeme-icme', name:'Kebapçı Restaurant',
+    desc:'Mangal dumanında odun ateşi Adana kebabı.',
+    img:'https://images.unsplash.com/photo-1544025162-d76694265947?w=800&q=80',
+    url:'https://juniorusaa.github.io/kebapci/',
+    accent:'#bf360c', accentLight:'rgba(191,54,12,0.15)',
+    chips:['Kebap','Mangal'], cat_label:'Restaurant', featured:false
+  },
+  {
+    id:'fast-food', cat:'yeme-icme', name:'Fast Food Restaurant',
+    desc:'Taze içerikli el yapımı smash burger ve fast food.',
+    img:'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&q=80',
+    url:'https://juniorusaa.github.io/fast-food/',
+    accent:'#ffc107', accentLight:'rgba(255,193,7,0.15)',
+    chips:['Burger','Fast Food'], cat_label:'Restaurant', featured:false
+  },
+  {
+    id:'cicekci', cat:'hizmet', name:'Çiçekçi ve Peyzaj',
+    desc:'Taze çiçek aranjmanı ve profesyonel peyzaj hizmetleri.',
+    img:'https://images.unsplash.com/photo-1487530811015-780f13f098d8?w=800&q=80',
+    url:'https://juniorusaa.github.io/cicekci/',
+    accent:'#a5d6a7', accentLight:'rgba(165,214,167,0.15)',
+    chips:['Çiçek','Peyzaj'], cat_label:'Çiçekçi', featured:false
+  },
+  {
+    id:'cicekci-tanitim', cat:'hizmet', name:'Çiçekçi Tanıtımı',
+    desc:'El tasarımı çiçek aranjmanları ve gelin buketi.',
+    img:'https://images.unsplash.com/photo-1490750967868-88df5691cc22?w=800&q=80',
+    url:'https://juniorusaa.github.io/cicekci-tanitim/',
+    accent:'#f48fb1', accentLight:'rgba(244,143,177,0.15)',
+    chips:['Çiçek','Buket'], cat_label:'Çiçekçi', featured:false
+  },
+  {
+    id:'unlu-mamuller', cat:'yeme-icme', name:'Unlu Mamuller ve Pastane',
+    desc:'Taze ekmek, börek, pasta ve kahvaltılık ürünler.',
+    img:'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&q=80',
+    url:'https://juniorusaa.github.io/unlu-mamuller/',
+    accent:'#ff8f00', accentLight:'rgba(255,143,0,0.15)',
+    chips:['Pastane','Ekmek'], cat_label:'Pastane', featured:false
+  },
+  {
+    id:'kompozit-insaat', cat:'kurumsal', name:'Kompozit İnşaat',
+    desc:'Alüminyum kompozit panel ve cam cephe sistemleri.',
+    img:'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800&q=80',
+    url:'https://juniorusaa.github.io/kompozit-insaat/',
+    accent:'#29b6f6', accentLight:'rgba(41,182,246,0.15)',
+    chips:['Kompozit','Cephe'], cat_label:'İnşaat', featured:false
+  },
+  {
+    id:'tarim-hayvancilik', cat:'kurumsal', name:'Tarım ve Hayvancılık',
+    desc:'Büyükbaş hayvancılık ve organik tarım üretimi.',
+    img:'https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=800&q=80',
+    url:'https://juniorusaa.github.io/tarim-hayvancilik/',
+    accent:'#81c784', accentLight:'rgba(129,199,132,0.15)',
+    chips:['Tarım','Hayvancılık'], cat_label:'Tarım', featured:false
+  },
+  {
+    id:'botanik-tarim', cat:'kurumsal', name:'Botanik ve Tarım',
+    desc:'Bitki yetiştirme, toprak analizi ve tarım danışmanlığı.',
+    img:'https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?w=800&q=80',
+    url:'https://juniorusaa.github.io/botanik-tarim/',
+    accent:'#a5d6a7', accentLight:'rgba(165,214,167,0.15)',
+    chips:['Botanik','Tarım'], cat_label:'Tarım', featured:false
+  },
+  {
+    id:'elektronik-servis', cat:'hizmet', name:'Elektronik Teknik Servis',
+    desc:'Laptop, tablet ve tüm elektronik cihaz tamiri.',
+    img:'https://images.unsplash.com/photo-1588508065123-287b28e013da?w=800&q=80',
+    url:'https://juniorusaa.github.io/elektronik-servis/',
+    accent:'#40c4ff', accentLight:'rgba(64,196,255,0.15)',
+    chips:['Elektronik','Laptop'], cat_label:'Servis', featured:false
+  },
+  {
+    id:'osgb', cat:'kurumsal', name:'OSGB Firması',
+    desc:'İşyeri hekimi, iş güvenliği uzmanı ve risk analizi.',
+    img:'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=800&q=80',
+    url:'https://juniorusaa.github.io/osgb/',
+    accent:'#00acc1', accentLight:'rgba(0,172,193,0.15)',
+    chips:['OSGB','İş Güvenliği'], cat_label:'Güvenlik', featured:false
+  },
+  {
+    id:'kreatif-ajans', cat:'kurumsal', name:'Kreatif Reklam Ajansı',
+    desc:'Marka kimliği, reklam filmi ve dijital içerik üretimi.',
+    img:'https://images.unsplash.com/photo-1542744094-3a31f272c490?w=800&q=80',
+    url:'https://juniorusaa.github.io/kreatif-ajans/',
+    accent:'#e040fb', accentLight:'rgba(224,64,251,0.15)',
+    chips:['Reklam','Kreatif'], cat_label:'Ajans', featured:true
+  },
+  {
+    id:'lastik-kurtarma', cat:'hizmet', name:'Lastik Servis ve Kurtarma',
+    desc:'7/24 yol yardım, lastik değişim ve oto çekici.',
+    img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80',
+    url:'https://juniorusaa.github.io/lastik-kurtarma/',
+    accent:'#ef5350', accentLight:'rgba(239,83,80,0.15)',
+    chips:['Lastik','Kurtarma'], cat_label:'Otomotiv', featured:false
+  },
+  {
+    id:'finans-danismanlik', cat:'kurumsal', name:'Finans ve Danışmanlık',
+    desc:'Vergi planlaması, muhasebe ve yatırım danışmanlığı.',
+    img:'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800&q=80',
+    url:'https://juniorusaa.github.io/finans-danismanlik/',
+    accent:'#42a5f5', accentLight:'rgba(66,165,245,0.15)',
+    chips:['Finans','Muhasebe'], cat_label:'Finans', featured:true
+  },
+  {
+    id:'oto-kurtarma', cat:'hizmet', name:'Oto Kurtarma ve Çekici',
+    desc:'Acil oto çekici ve yol yardım hizmeti 7/24.',
+    img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80',
+    url:'https://juniorusaa.github.io/oto-kurtarma/',
+    accent:'#ff7043', accentLight:'rgba(255,112,67,0.15)',
+    chips:['Çekici','Kurtarma'], cat_label:'Otomotiv', featured:false
+  },
+  {
+    id:'meyve-sebze', cat:'kurumsal', name:'Meyve Sebze Tarım',
+    desc:'Bahçeden sofraya taze meyve ve sebze toptan satışı.',
+    img:'https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=800&q=80',
+    url:'https://juniorusaa.github.io/meyve-sebze/',
+    accent:'#66bb6a', accentLight:'rgba(102,187,106,0.15)',
+    chips:['Meyve','Sebze'], cat_label:'Tarım', featured:false
+  },
+  {
+    id:'botanik-ziraat', cat:'kurumsal', name:'Botanik Ziraat',
+    desc:'Ziraat mühendisliği, bitki analizi ve sera danışmanlığı.',
+    img:'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800&q=80',
+    url:'https://juniorusaa.github.io/botanik-ziraat/',
+    accent:'#81c784', accentLight:'rgba(129,199,132,0.15)',
+    chips:['Botanik','Ziraat'], cat_label:'Tarım', featured:false
+  },
+  {
+    id:'dis-ticaret', cat:'kurumsal', name:'Dış Ticaret ve İmalat',
+    desc:'İhracat, ithalat ve gümrük danışmanlığı hizmetleri.',
+    img:'https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=800&q=80',
+    url:'https://juniorusaa.github.io/dis-ticaret/',
+    accent:'#1e88e5', accentLight:'rgba(30,136,229,0.15)',
+    chips:['İhracat','Ticaret'], cat_label:'Ticaret', featured:false
+  },
+  {
+    id:'bilisim-danismanlik', cat:'kurumsal', name:'Bilişim ve Danışmanlık',
+    desc:'IT danışmanlığı, proje yönetimi ve dijital dönüşüm.',
+    img:'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80',
+    url:'https://juniorusaa.github.io/bilisim-danismanlik/',
+    accent:'#00bcd4', accentLight:'rgba(0,188,212,0.15)',
+    chips:['BT','Danışmanlık'], cat_label:'Teknoloji', featured:false
+  },
+  {
+    id:'enerji-sirket', cat:'kurumsal', name:'Kurumsal Enerji',
+    desc:'Yenilenebilir enerji, doğalgaz ve enerji ticareti.',
+    img:'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800&q=80',
+    url:'https://juniorusaa.github.io/enerji-sirket/',
+    accent:'#76ff03', accentLight:'rgba(118,255,3,0.15)',
+    chips:['Enerji','Yenilenebilir'], cat_label:'Enerji', featured:false
+  },
+  {
+    id:'karavan', cat:'hizmet', name:'Karavan Firması',
+    desc:'Özel imalat karavan ve mobil yaşam çözümleri.',
+    img:'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=800&q=80',
+    url:'https://juniorusaa.github.io/karavan/',
+    accent:'#ffcc02', accentLight:'rgba(255,204,2,0.15)',
+    chips:['Karavan','Outdoor'], cat_label:'Turizm', featured:false
+  },
+  {
+    id:'cati-izolasyon', cat:'kurumsal', name:'Çatı İzolasyon',
+    desc:'Su yalıtımı, ısı izolasyonu ve çatı kaplama hizmetleri.',
+    img:'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=800&q=80',
+    url:'https://juniorusaa.github.io/cati-izolasyon/',
+    accent:'#ff8f00', accentLight:'rgba(255,143,0,0.15)',
+    chips:['Çatı','İzolasyon'], cat_label:'İnşaat', featured:false
+  },
+  {
+    id:'elektrik-enerji', cat:'kurumsal', name:'Elektrik ve Enerji',
+    desc:'Elektrik tesisat, pano imalat ve aydınlatma tasarımı.',
+    img:'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=800&q=80',
+    url:'https://juniorusaa.github.io/elektrik-enerji/',
+    accent:'#ffd600', accentLight:'rgba(255,214,0,0.15)',
+    chips:['Elektrik','Tesisat'], cat_label:'Elektrik', featured:false
+  },
+  {
+    id:'havalandirma', cat:'kurumsal', name:'Havalandırma Sanayi',
+    desc:'Endüstriyel havalandırma ve VRF klima sistemleri.',
+    img:'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=800&q=80',
+    url:'https://juniorusaa.github.io/havalandirma/',
+    accent:'#80deea', accentLight:'rgba(128,222,234,0.15)',
+    chips:['Havalandırma','Klima'], cat_label:'HVAC', featured:false
+  },
+  {
+    id:'pastane-cafe', cat:'yeme-icme', name:'Pastane ve Cafe',
+    desc:'El yapımı pasta, taze kahve ve butik cafe deneyimi.',
+    img:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=80',
+    url:'https://juniorusaa.github.io/pastane-cafe/',
+    accent:'#ff8f00', accentLight:'rgba(255,143,0,0.15)',
+    chips:['Pastane','Cafe'], cat_label:'Cafe', featured:false
+  },
+  {
+    id:'cafe-restoran', cat:'yeme-icme', name:'Cafe ve Restaurant',
+    desc:'Gündüz cafe, akşam restoran. Her öğünde mükemmel lezzet.',
+    img:'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80',
+    url:'https://juniorusaa.github.io/cafe-restoran/',
+    accent:'#ff7043', accentLight:'rgba(255,112,67,0.15)',
+    chips:['Cafe','Restoran'], cat_label:'Cafe', featured:false
+  },
+  {
+    id:'sigorta', cat:'kurumsal', name:'Sigorta ve Kasko',
+    desc:'Araç, konut, sağlık ve ticari sigorta çözümleri.',
+    img:'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=80',
+    url:'https://juniorusaa.github.io/sigorta/',
+    accent:'#1565c0', accentLight:'rgba(21,101,192,0.15)',
+    chips:['Sigorta','Kasko'], cat_label:'Finans', featured:false
+  },
+  {
+    id:'insaat-mimarlik', cat:'kurumsal', name:'İnşaat ve Mimarlık',
+    desc:'Mimari tasarım, iç mimarlık ve inşaat uygulaması.',
+    img:'https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=800&q=80',
+    url:'https://juniorusaa.github.io/insaat-mimarlik/',
+    accent:'#7986cb', accentLight:'rgba(121,134,203,0.15)',
+    chips:['İnşaat','Mimarlık'], cat_label:'İnşaat', featured:true
+  },
+  {
+    id:'alarm-kamera', cat:'kurumsal', name:'Alarm ve Kamera',
+    desc:'Akıllı alarm, CCTV ve erişim kontrol sistemleri.',
+    img:'https://images.unsplash.com/photo-1557597774-9d273605dfa9?w=800&q=80',
+    url:'https://juniorusaa.github.io/alarm-kamera/',
+    accent:'#26c6da', accentLight:'rgba(38,198,218,0.15)',
+    chips:['Alarm','Kamera'], cat_label:'Güvenlik', featured:false
+  },
+  {
+    id:'tamir-bakim', cat:'hizmet', name:'Tamir ve Bakım Servisi',
+    desc:'Tadilat, tesisat, elektrik ve beyaz eşya servisi.',
+    img:'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=800&q=80',
+    url:'https://juniorusaa.github.io/tamir-bakim/',
+    accent:'#78909c', accentLight:'rgba(120,144,156,0.15)',
+    chips:['Tamir','Bakım'], cat_label:'Servis', featured:false
+  },
+  {
+    id:'perde', cat:'hizmet', name:'Perde Firması',
+    desc:'Fon perde, stor, jaluzi ve tül çözümleri.',
+    img:'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80',
+    url:'https://juniorusaa.github.io/perde/',
+    accent:'#ce93d8', accentLight:'rgba(206,147,216,0.15)',
+    chips:['Perde','Stor'], cat_label:'Dekorasyon', featured:false
+  },
+  {
+    id:'gelinlik', cat:'hizmet', name:'Gelinlik Firması',
+    desc:'Özel tasarım gelinlik ve nişanlık koleksiyonu.',
+    img:'https://images.unsplash.com/photo-1519657337289-077653f724ed?w=800&q=80',
+    url:'https://juniorusaa.github.io/gelinlik/',
+    accent:'#f48fb1', accentLight:'rgba(244,143,177,0.15)',
+    chips:['Gelinlik','Moda'], cat_label:'Moda', featured:false
+  },
+  {
+    id:'reklam-ajans', cat:'kurumsal', name:'Reklam Ajansı',
+    desc:'TV, dijital ve açık hava reklam kampanyaları.',
+    img:'https://images.unsplash.com/photo-1542744094-3a31f272c490?w=800&q=80',
+    url:'https://juniorusaa.github.io/reklam-ajans/',
+    accent:'#7c4dff', accentLight:'rgba(124,77,255,0.15)',
+    chips:['Reklam','Ajans'], cat_label:'Ajans', featured:false
+  },
+  {
+    id:'yapi-prefabrik', cat:'kurumsal', name:'Yapı Prefabrik Firması',
+    desc:'Prefabrik yapı, çelik konstrüksiyon ve modüler bina.',
+    img:'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=800&q=80',
+    url:'https://juniorusaa.github.io/yapi-prefabrik/',
+    accent:'#aed581', accentLight:'rgba(174,213,129,0.15)',
+    chips:['Prefabrik','Yapı'], cat_label:'İnşaat', featured:false
+  }
+];
+
+function renderCards(filter){
+  const grid = document.getElementById('demosGrid');
+  const list = filter === 'hepsi' ? demos : demos.filter(d => d.cat === filter);
+  grid.innerHTML = list.map(d => `
+    <div class="demo-card${d.featured?' featured':''}" data-cat="${d.cat}">
+      <div class="demo-preview">
+        <img src="${d.img}" alt="${d.name}" loading="lazy">
+        <div class="demo-preview-overlay"></div>
+        <div class="preview-chips">
+          ${d.chips.map(c => `<span class="chip" style="background:${d.accentLight};color:${d.accent};border:1px solid ${d.accent}30;">${c}</span>`).join('')}
+          ${d.featured ? `<span class="chip" style="background:rgba(52,211,153,0.12);color:#34d399;border:1px solid rgba(52,211,153,0.25);">Öne Çıkan</span>` : ''}
+        </div>
+        <a href="${d.url}" target="_blank" class="demo-open-btn">Demoyu Aç</a>
+      </div>
+      <div class="demo-body">
+        <div class="demo-cat" style="color:${d.accent};">${d.cat_label}</div>
+        <div class="demo-name">${d.name}</div>
+        <div class="demo-desc">${d.desc}</div>
+        <div class="demo-footer">
+          <span class="demo-live">Canlı</span>
+          <a href="${d.url}" target="_blank" class="demo-link" style="color:${d.accent};">Görüntüle <span>→</span></a>
+        </div>
+      </div>
+    </div>
+  `).join('');
+  updateCounts();
+}
+
+function updateCounts() {
+  const counts = {hepsi: demos.length};
+  demos.forEach(d => { counts[d.cat] = (counts[d.cat] || 0) + 1; });
+  Object.keys(counts).forEach(k => {
+    const el = document.getElementById('cnt-' + k);
+    if(el) el.textContent = counts[k];
+  });
+  const fc = document.getElementById('footer-count');
+  if(fc) fc.textContent = demos.length;
+}
+
+function filterCards(cat, btn) {
+  document.querySelectorAll('.filt').forEach(b => b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  renderCards(cat);
+}
+
+renderCards('hepsi');
+</script>
+</body>
+</html>
